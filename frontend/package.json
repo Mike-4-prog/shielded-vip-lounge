@@ -1,0 +1,43 @@
+﻿{
+    "name":  "shielded-vip-lounge-frontend",
+    "version":  "1.0.0",
+    "type":  "module",
+    "scripts":  {
+                    "dev":  "vite",
+                    "build":  "vite build",
+                    "preview":  "vite preview",
+                    "compile-circuit":  "echo \"Install Midnight Compact compiler: npm install -g @midnight-ntwrk/compactc\""
+                },
+    "dependencies":  {
+                         "react":  "^18.2.0",
+                         "react-dom":  "^18.2.0"
+                     },
+    "devDependencies":  {
+                            "@vitejs/plugin-react":  "^4.0.0",
+                            "vite":  "^4.0.0"
+                        },
+    "midnightJsContext":  {
+                              "sdkStatus":  "alpha",
+                              "realSdkVersion":  "3.0.0-alpha.6",
+                              "sdkRepository":  "https://github.com/midnightntwrk/midnight-js",
+                              "productionPackages":  [
+                                                         "@midnight-ntwrk/midnight-js-contracts",
+                                                         "@midnight-ntwrk/midnight-js-level-private-state-provider",
+                                                         "@midnight-ntwrk/http-client-proof-provider",
+                                                         "@midnight-ntwrk/compact-js",
+                                                         "@midnight-ntwrk/platform-js"
+                                                     ],
+                              "note":  "This tutorial demonstrates production-ready patterns for Midnight.js. For production use, install the real Midnight SDK packages listed above."
+                          },
+    "keywords":  [
+                     "midnight-network",
+                     "zero-knowledge",
+                     "zk-proofs",
+                     "privacy",
+                     "token-gating",
+                     "shielded-contracts",
+                     "web3",
+                     "blockchain"
+                 ],
+    "description":  "A privacy-preserving VIP lounge demonstrating Midnight Network\u0027s zero-knowledge token gating patterns. Educational implementation showing real Midnight.js SDK architecture."
+}

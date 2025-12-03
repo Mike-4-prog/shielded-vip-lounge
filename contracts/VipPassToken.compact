@@ -1,0 +1,38 @@
+// contracts/VipPassToken.compact
+// Shielded VIP Pass Token Contract
+// Simple, compilation-safe version
+
+contract VipPassToken {
+    // State
+    state balances: Map<Address, UInt64> = Map::empty();
+    state owner: Address;
+    
+    // Initialize
+    init() {
+        owner = msg.sender;
+        balances.insert(owner, 1000);
+    }
+    
+    // Transfer
+    function transfer(to: Address, amount: UInt64) -> () {
+        senderBalance: UInt64 = balances.get(msg.sender);
+        
+        // Simple balance check
+        canTransfer: Bool = senderBalance >= amount;
+        
+        if (canTransfer) {
+            receiverBalance: UInt64 = balances.get(to);
+            newSenderBalance: UInt64 = senderBalance - amount;
+            newReceiverBalance: UInt64 = receiverBalance + amount;
+            
+            balances.insert(msg.sender, newSenderBalance);
+            balances.insert(to, newReceiverBalance);
+        }
+    }
+    
+    // Check VIP status
+    function isVip(user: Address) -> Bool {
+        balance: UInt64 = balances.get(user);
+        return balance >= 100;  // Simple threshold
+    }
+}
