@@ -1,38 +1,30 @@
-// contracts/VipPassToken.compact
-// Shielded VIP Pass Token Contract
-// Simple, compilation-safe version
+﻿import std;
 
 contract VipPassToken {
-    // State
-    state balances: Map<Address, UInt64> = Map::empty();
-    state owner: Address;
+    state balances: std::Map<std::Address, std::U64> = std::Map::empty();
+    state owner: std::Address;
     
-    // Initialize
     init() {
-        owner = msg.sender;
+        owner = std::msg::sender();
         balances.insert(owner, 1000);
     }
     
-    // Transfer
-    function transfer(to: Address, amount: UInt64) -> () {
-        senderBalance: UInt64 = balances.get(msg.sender);
-        
-        // Simple balance check
-        canTransfer: Bool = senderBalance >= amount;
+    function transfer(to: std::Address, amount: std::U64) -> () {
+        let senderBalance: std::U64 = balances.get(std::msg::sender());
+        let canTransfer: std::Bool = senderBalance >= amount;
         
         if (canTransfer) {
-            receiverBalance: UInt64 = balances.get(to);
-            newSenderBalance: UInt64 = senderBalance - amount;
-            newReceiverBalance: UInt64 = receiverBalance + amount;
+            let receiverBalance: std::U64 = balances.get(to);
+            let newSenderBalance: std::U64 = senderBalance - amount;
+            let newReceiverBalance: std::U64 = receiverBalance + amount;
             
-            balances.insert(msg.sender, newSenderBalance);
+            balances.insert(std::msg::sender(), newSenderBalance);
             balances.insert(to, newReceiverBalance);
         }
     }
     
-    // Check VIP status
-    function isVip(user: Address) -> Bool {
-        balance: UInt64 = balances.get(user);
-        return balance >= 100;  // Simple threshold
+    function isVip(user: std::Address) -> std::Bool {
+        let balance: std::U64 = balances.get(user);
+        return balance >= 100;
     }
 }

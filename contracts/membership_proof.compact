@@ -1,0 +1,13 @@
+﻿import std;
+
+circuit MembershipProof() -> std::Bool {
+    witness userSecret: std::Field;
+    param merkleRoot: std::Field;
+    param threshold: std::Field;
+    param userBalance: std::Field;
+    
+    let hasValidSecret: std::Bool = userSecret != 0;
+    let meetsBalanceRequirement: std::Bool = userBalance >= threshold;
+    
+    return hasValidSecret && meetsBalanceRequirement;
+}
