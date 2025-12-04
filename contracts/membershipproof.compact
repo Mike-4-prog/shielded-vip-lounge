@@ -1,6 +1,6 @@
 import CompactStandardLibrary;
 
-export circuit vippasstoken(): [] {
-    // VIP token circuit  
+export circuit membershipproof(): [] {
+    // Membership proof circuit
     // For the tutorial, this can be simple
 }
