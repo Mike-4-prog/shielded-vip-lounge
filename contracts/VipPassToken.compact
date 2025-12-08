@@ -11,7 +11,7 @@ export circuit verifyVIPAccess(): [] {
     
     // Time-based verification pattern (blockTimeGt available in 0.25.0)
     // Example: Membership expires after certain time
-    // let membershipValid = blockTimeLt(1735689600); // Expires Jan 1, 2025
+    // let membershipValid = blockTimeLt(2000000000); // Future timestamp (~2033)
     
     // Tier verification logic:
     // let userTier = determineTier(userTokenBalance);
