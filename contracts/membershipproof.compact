@@ -1,23 +1,7 @@
-import CompactStandardLibrary;
-
-// Membership Verification Circuit - Compact 0.25.0
-// Demonstrates real verification patterns developers can use
-
-export circuit verifyMembership(): [] {
-    // Example: Token threshold verification
-    // In production, tokenBalance would be a witness
-    
-    const minimumTokens = 10;  // 0.25.0 allows const declarations
-    
-    // Verification logic pattern:
-    // 1. Check token ownership (private witness)
-    // 2. Verify meets minimum threshold  
-    // 3. Generate zero-knowledge proof
-    
-    // Production implementation:
-    // let hasEnoughTokens = tokenBalance >= minimumTokens;
-    // assert(hasEnoughTokens, "Insufficient tokens for membership");
-    
-    // Current: Teaching the correct structure
-    // Developers implement actual verification here
+export circuit verifyTokenOwnership(
+    userTokenBalance: Field,
+    requiredMinimum: Field  
+): Field {
+    const ownershipProof = userTokenBalance - requiredMinimum;
+    return ownershipProof;
 }
