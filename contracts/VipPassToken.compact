@@ -1,7 +1,0 @@
-export circuit verifyVIPAccess(
-    userTokenBalance: Field,
-    vipThreshold: Field
-): Field {
-    const accessProof = userTokenBalance - vipThreshold;
-    return accessProof;
-}

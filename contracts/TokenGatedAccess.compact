@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: MIT
+//
+// TokenGatedAccess.compact
+//
+// This contract demonstrates a simple token-gating mechanism.
+// A user proves they:
+// 1. Own at least a required number of tokens, and
+// 2. Possess a valid access code
+//
+// No token balances or codes are revealed publicly.
+// Only a Boolean proof of access eligibility is returned.
+
+pragma language_version >= 0.17.0;
+
+import CompactStandardLibrary;
+
+export circuit verifyTokenGate(
+    // Private input: number of tokens owned by the user
+    userTokens: Uint<64>,
+
+    // Public or agreed threshold for access
+    requiredTokens: Uint<64>,
+
+    // Private input: user-provided access code
+    userCode: Bytes<32>,
+
+    // Public or pre-agreed valid access code hash/value
+    validCode: Bytes<32>
+): Boolean {
+    // Access is granted only if both conditions are met
+    return userTokens >= requiredTokens && userCode == validCode;
+}
+
+
+
+

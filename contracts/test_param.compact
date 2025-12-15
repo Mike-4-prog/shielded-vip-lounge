@@ -1,6 +1,0 @@
-import CompactStandardLibrary;
-
-// Test different type names
-export circuit test(): [] {
-    // Just testing what types are available
-}

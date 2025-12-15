@@ -1,7 +1,0 @@
-export circuit verifyTokenOwnership(
-    userTokenBalance: Field,
-    requiredMinimum: Field  
-): Field {
-    const ownershipProof = userTokenBalance - requiredMinimum;
-    return ownershipProof;
-}

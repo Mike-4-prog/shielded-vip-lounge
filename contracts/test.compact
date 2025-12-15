@@ -1,5 +1,0 @@
-import CompactStandardLibrary;
-
-export circuit test(): [] {
-    // Empty circuit
-}
