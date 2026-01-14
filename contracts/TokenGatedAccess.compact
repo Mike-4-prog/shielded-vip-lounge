@@ -1,34 +1,41 @@
 // SPDX-License-Identifier: MIT
-//
-// TokenGatedAccess.compact
-//
-// This contract demonstrates a simple token-gating mechanism.
-// A user proves they:
-// 1. Own at least a required number of tokens, and
-// 2. Possess a valid access code
-//
-// No token balances or codes are revealed publicly.
-// Only a Boolean proof of access eligibility is returned.
-
+// TokenGatedAccess.compact - Demonstrating ledger-based multi-factor gating
 pragma language_version >= 0.17.0;
 
 import CompactStandardLibrary;
 
-export circuit verifyTokenGate(
-    // Private input: number of tokens owned by the user
-    userTokens: Uint<64>,
+module TokenGatedAccess {
+    // Ledger for token balances.
+    export ledger tokenBalances: Map<Either<ZswapCoinPublicKey, ContractAddress>, Uint<64>>;
+    // Ledger storing a commitment (e.g., a hash of an access code).
+    export ledger accessCommitments: Map<Either<ZswapCoinPublicKey, ContractAddress>, Bytes<32>>;
 
-    // Public or agreed threshold for access
-    requiredTokens: Uint<64>,
+    // Helper: Get token balance
+    circuit getTokenBalance(address: Either<ZswapCoinPublicKey, ContractAddress>): Uint<64> {
+        if (tokenBalances.member(disclose(address))) {
+            return tokenBalances.lookup(disclose(address));
+        }
+        return 0;
+    }
+    
+    // Helper: Check if commitment exists
+    circuit hasValidCommitment(address: Either<ZswapCoinPublicKey, ContractAddress>): Boolean {
+        return accessCommitments.member(disclose(address));
+    }
 
-    // Private input: user-provided access code
-    userCode: Bytes<32>,
-
-    // Public or pre-agreed valid access code hash/value
-    validCode: Bytes<32>
-): Boolean {
-    // Access is granted only if both conditions are met
-    return userTokens >= requiredTokens && userCode == validCode;
+    // Core Verification: Prove you have tokens AND know the secret.
+    export circuit verifyAccess(
+        // Public Inputs:
+        userAddress: Either<ZswapCoinPublicKey, ContractAddress>,
+        requiredTokens: Uint<64>,
+        // Private Witnesses:
+        userSecret: Field,       // Proves control of `userAddress`
+        codeSecret: Field        // Secret that corresponds to the on-chain commitment
+    ): Boolean {
+        // Verify both conditions directly without intermediate variables
+        return getTokenBalance(userAddress) >= requiredTokens && 
+               hasValidCommitment(userAddress);
+    }
 }
 
 

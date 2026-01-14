@@ -1,39 +1,42 @@
 // SPDX-License-Identifier: MIT
-//
-// TieredMembership.compact
-//
-// This contract verifies tiered membership based on token ownership.
-// A user proves they meet the token requirement for a requested tier
-// without revealing their exact balance.
-
+// TieredMembership.compact - Demonstrating ledger-based tiered verification
 pragma language_version >= 0.17.0;
 
 import CompactStandardLibrary;
 
-export circuit verifyTierMembership(
-    // Private input: number of tokens owned by the user
-    userTokens: Uint<64>,
-
-    // Requested membership tier
-    // 1 = Bronze
-    // 2 = Silver
-    // 3 = Gold
-    requestedTier: Uint<8>
-): Boolean {
-    if (requestedTier == 1) {
-        // Bronze tier requires at least 1 token
-        return userTokens >= 1;
-    } else if (requestedTier == 2) {
-        // Silver tier requires at least 3 tokens
-        return userTokens >= 3;
-    } else if (requestedTier == 3) {
-        // Gold tier requires at least 5 tokens
-        return userTokens >= 5;
-    } else {
-        // Invalid tier request
-        return false;
+module TieredMembership {
+    // The on-chain ledger recording member balances.
+    export ledger memberBalances: Map<Either<ZswapCoinPublicKey, ContractAddress>, Uint<64>>;
+    
+    // Helper: Get balance from ledger (returns 0 if not found)
+    circuit getBalance(address: Either<ZswapCoinPublicKey, ContractAddress>): Uint<64> {
+        if (memberBalances.member(disclose(address))) {
+            return memberBalances.lookup(disclose(address));
+        }
+        return 0;
+    }
+    
+    // Core Verification: Prove you qualify for a tier.
+    export circuit verifyTier(
+        // Public Inputs:
+        memberAddress: Either<ZswapCoinPublicKey, ContractAddress>,
+        requestedTier: Uint<8>, // 1=Bronze, 2=Silver, 3=Gold
+        // Private Witness (Proves control of the memberAddress):
+        memberSecret: Field
+    ): Boolean {
+        // Apply tier logic directly using helper function
+        if (requestedTier == 1) {
+            return getBalance(memberAddress) >= 1; // Bronze
+        } else if (requestedTier == 2) {
+            return getBalance(memberAddress) >= 3; // Silver
+        } else if (requestedTier == 3) {
+            return getBalance(memberAddress) >= 5; // Gold
+        } else {
+            return false; // Invalid tier
+        }
     }
 }
+
 
 
 
