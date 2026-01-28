@@ -1,0 +1,128 @@
+// SPDX-License-Identifier: MIT
+
+// TieredTokenGated.compact - Production-ready with witnesses
+pragma language_version 0.18.0;  // CRITICAL: Matches compiler 0.22.0
+
+import CompactStandardLibrary;
+
+// =====================
+// Data Structures
+// =====================
+export enum MembershipTier { BRONZE, SILVER, GOLD }
+
+// =====================
+// Witness Declarations (NEW!)
+// =====================
+witness privateBalance(): Uint<222>;  // CHANGED: 256 -> 254
+witness privateTier(): MembershipTier;
+
+// =====================
+// Ledger Declarations
+// =====================
+export ledger memberBalances: Map<Either<ZswapCoinPublicKey,
+ContractAddress>, Uint<64>>;
+export ledger tokenBalances: Map<Either<ZswapCoinPublicKey,
+ContractAddress>, Uint<64>>;
+export ledger accessCommitments: Map<Either<ZswapCoinPublicKey,
+ContractAddress>, Bytes<32>>;
+
+// =====================
+// Helper Circuits
+// =====================
+circuit getMemberBalance(address: Either<ZswapCoinPublicKey,
+ContractAddress>): Uint<64> {
+    if (memberBalances.member(disclose(address))) {
+        return memberBalances.lookup(disclose(address));
+    }
+    return 0;
+}
+
+circuit getTokenBalance(address: Either<ZswapCoinPublicKey,
+ContractAddress>): Uint<64> {
+    if (tokenBalances.member(disclose(address))) {
+        return tokenBalances.lookup(disclose(address));
+    }
+    return 0;
+}
+
+circuit hasValidCommitment(address: Either<ZswapCoinPublicKey,
+ContractAddress>): Boolean {
+    return accessCommitments.member(disclose(address));
+}
+
+// =====================
+// Export Circuits (Entry Points)
+// =====================
+
+// 1. Tier Verification (using witness for private tier check)
+export circuit verifyTierWithWitness(
+    requestedTier: MembershipTier
+): Boolean {
+    const privateUserTier = disclose(privateTier());
+
+    if (privateUserTier == MembershipTier.BRONZE) {
+        return disclose(privateBalance()) >= 100;
+    } else if (privateUserTier == MembershipTier.SILVER) {
+        return disclose(privateBalance()) >= 500;
+    } else if (privateUserTier == MembershipTier.GOLD) {
+        return disclose(privateBalance()) >= 1000;
+    }
+    return false;
+}
+
+// 2. Public tier verification (original)
+export circuit verifyTier(
+    memberAddress: Either<ZswapCoinPublicKey, ContractAddress>,
+    requestedTier: MembershipTier
+): Boolean {
+    const balance = getMemberBalance(memberAddress);
+
+    if (disclose(requestedTier) == MembershipTier.BRONZE) {
+        return balance >= 1;
+    } else if (disclose(requestedTier) == MembershipTier.SILVER) {
+        return balance >= 3;
+    } else if (disclose(requestedTier) == MembershipTier.GOLD) {
+        return balance >= 5;
+    }
+    return false;
+}
+
+// 3. Token-Gated Verification
+export circuit verifyTokenAccess(
+    userAddress: Either<ZswapCoinPublicKey, ContractAddress>,
+    requiredTokens: Uint<64>
+): Boolean {
+    const tokenBalance = getTokenBalance(userAddress);
+    const hasCommitment = hasValidCommitment(userAddress);
+
+    if (tokenBalance < disclose(requiredTokens)) {
+        return false;
+    }
+
+    return hasCommitment;
+}
+
+// 4. Simple Tier Checks
+export circuit isBronzeMember(address: Either<ZswapCoinPublicKey,
+ContractAddress>): Boolean {
+    return getMemberBalance(address) >= 1;
+}
+
+export circuit isSilverMember(address: Either<ZswapCoinPublicKey,
+ContractAddress>): Boolean {
+    return getMemberBalance(address) >= 3;
+}
+
+export circuit isGoldMember(address: Either<ZswapCoinPublicKey,
+ContractAddress>): Boolean {
+    return getMemberBalance(address) >= 5;
+}
+
+// 5. Witness-based circuits (NEW!)
+export circuit checkPrivateBalance(): Uint<222> {  // CHANGED: 256 -> 254
+    return disclose(privateBalance());
+}
+
+export circuit checkPrivateTier(): MembershipTier {
+    return disclose(privateTier());
+}

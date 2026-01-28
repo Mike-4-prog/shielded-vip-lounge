@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  proof-server:
+    image: midnightntwrk/proof-server:4.0.0
+    container_name: midnight-proof-server
+    ports:
+      - "3000:3000"
+    environment:
+      - RUST_LOG=info
+    volumes:
+      - ./proof-server-data:/data
+    restart: unless-stopped

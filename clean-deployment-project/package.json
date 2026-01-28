@@ -1,0 +1,18 @@
+{
+  "name": "shielded-vip-lounge-deployment",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "node test-contract.mjs",
+    "deploy": "node deploy-simple.js",
+    "devnet": "make devnet || echo 'Makefile not found. Start devnet manually.'",
+    "verify": "node simple-contract-loader.mjs"
+  },
+  "dependencies": {
+    // Remove @midnight-ntwrk/compact-dev-tools - it's not on public npm
+    // You'll need to install Midnight SDK separately when ready to deploy
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
+}

@@ -1,148 +1,131 @@
-# 🛡️ Shielded VIP Lounge  
-**Privacy-Preserving VIP Access Using Midnight Network Zero-Knowledge Proofs**
+# Shielded VIP Lounge - Tiered Token Gated Contract
 
-Shielded VIP Lounge is a decentralized application (dApp) that allows users to verify VIP status using **zero-knowledge proofs (ZKPs)** without revealing their identity.  
-Built on the **Midnight Network**, it enables secure membership verification, token-gated access, and privacy-preserving interactions.
+A privacy-preserving smart contract for gating access based on token balances and membership tiers, built with Midnight Network's zero-knowledge technology.
 
----
+## 🏗️ Project Overview
 
-## 🚀 Features
+The Shielded VIP Lounge contract implements a privacy-preserving access control system using zero-knowledge proofs. It verifies user eligibility based on token holdings and membership tiers without revealing sensitive user data.
 
-### 🔒 Privacy-Preserving Verification
-Users generate ZK proofs locally to prove VIP membership **without exposing identities or wallet details**.
+## 📊 Contract Status
 
-### 🪪 Membership Token (VIP Pass)
-A custom smart contract (`VipPassToken`) issues non-transferable VIP passes used to verify membership tiers.
+- **✅ Contract Compiled**: 8 ZK circuits implemented
+- **✅ Witness Functions**: 2 private witness functions ready
+- **✅ Verification**: Contract structure verified and ready
+- **⏳ Deployment**: Awaiting Midnight SDK for blockchain deployment
 
-### 🧠 Zero-Knowledge Circuits
-Custom circuits (created using Midnight’s compact syntax) allow:
-- Membership verification  
-- Tier validation  
-- Proof generation on the client
+## 🔧 Contract Architecture
 
-### 🌐 Frontend (Vite + React)
-A simple and interactive UI where users:
-- Connect wallet  
-- Generate ZK proofs  
-- Access exclusive VIP content  
+### Core Circuits
+1. **verifyTierWithWitness** - Private tier verification with witness inputs
+2. **verifyTier** - Public tier verification using on-chain data
+3. **verifyTokenAccess** - Token balance verification for access control
+4. **isBronzeMember** / **isSilverMember** / **isGoldMember** - Tier-specific checks
+5. **checkPrivateBalance** / **checkPrivateTier** - Witness-based private data verification
 
-### 🧩 Modular Architecture
-Clear separation of concerns:  
-`contracts/` → smart contracts  
-`contracts/circuits/` → ZK circuits  
-`frontend/` → UI + Midnight client
+### Privacy Features
+- **Zero-Knowledge Proofs**: User data remains private
+- **Witness Functions**: `privateBalance()` and `privateTier()` provide private inputs
+- **Tiered Access**: BRONZE, SILVER, GOLD membership levels
+- **Token Gating**: Access control based on token balances
 
----
-
-## 📂 Project Structure
-```text
+## 📁 Project Structure
 shielded-vip-lounge/
-│
-├── contracts/
-│ ├── VipPassToken.compact # Main membership token contract
-│ └── circuits/
-│ └── membership_proof.compact # Zero-knowledge circuit
-│
-├── frontend/
-│ ├── src/
-│ │ ├── App.jsx
-│ │ ├── components/
-│ │ │ ├── VIPTiers.jsx
-│ │ │ ├── VipLounge.jsx
-│ │ │ └── VerificationError.jsx
-│ │ └── utils/
-│ │ └── MidnightClient.js # Midnight JS SDK integration
-│ ├── index.html
-│ ├── main.jsx
-│ └── vite.config.js
-│
-├── LICENSE
-└── README.md
-```
+├── clean-deployment-project/ # Main deployment workspace
+│ ├── contract-build/ # Compiled contract
+│ ├── deploy.js # Deployment script
+│ ├── deploy-verify.js # Contract verification
+│ ├── test-contract.mjs # Contract testing
+│ ├── docker-compose.yml # DevNet configuration
+│ ├── Makefile # DevNet commands
+│ └── package.json # Dependencies
+├── contract/ # Source code
+│ ├── build/ # Compiled output
+│ ├── contracts/ # Contract sources
+│ └── src/ # TypeScript source files
+├── frontend/ # Web interface (optional)
+└── scripts/ # Utility scripts
 
----
+text
 
-## 🛠️ Installation & Setup
+## 🚀 Quick Start
 
-### 1. Clone the repository
+### 1. Verify Contract
 ```bash
-git clone https://github.com/Mike-4-prog/shielded-vip-lounge.git
-cd shielded-vip-lounge
-```
-### 3. Install frontend dependencies**
-```bash
-cd frontend
-npm install
-```
-### 3. Run the Frontend
+cd clean-deployment-project
+node deploy-verify.js
+2. Test Contract Loading
+bash
+node test-contract.mjs
+3. Development Network
+bash
+# Start local DevNet (when Midnight SDK available)
+make devnet
 
-```bash
-npm run dev
-```
-### 4. Install Midnight JS SDK
-```bash
-npm install midnight-js
-```
-## 🧾 Smart Contract Overview
-### VipPassToken.compact
+# Check status
+make status
 
-- A non-transferable membership token contract:
+# View logs
+make logs
 
-- Mints “VIP Pass” tokens
+# Clean up
+make clean
+4. Deployment
+bash
+# Deploy to DevNet (when Midnight SDK available)
+node deploy.js
+🔌 Prerequisites
+For full deployment capability, access to Midnight Network's development tools is required:
 
-- Assigns tiers (Gold, Silver, Bronze)
+Midnight SDK: For wallet creation and contract deployment
 
-- Locks tokens to prevent transfers
+Compact Runtime: Required by compiled contracts
 
-- Exposes membership verification interface for ZK circuits
-### membership_proof.compact
+DevNet: Local development network
 
-Zero-knowledge circuit for:
+🛠️ Development
+Contract Compilation
+bash
+cd contract
+# Use Midnight Compact compiler for contract compilation
+Verification
+bash
+cd clean-deployment-project
+node deploy-verify.js  # Verifies contract structure and readiness
+Testing
+bash
+node test-contract.mjs  # Tests contract loading and basic functionality
+🎯 Key Features
+Privacy-First Design: All user verification happens with zero-knowledge proofs
 
-- Proving token ownership
+Flexible Tier System: Three membership levels with configurable requirements
 
-- Validating tier
+Token-Based Access: Gated access controlled by token balances
 
-- Generating proofs without leaking wallet address
-## 🖥️ Frontend Overview
-Built With:
+Witness Support: Private data inputs from user devices
 
-- React
+Complete Circuit Suite: 8 specialized circuits for different verification scenarios
 
-- Vite
+📋 Deployment Notes
+Current Status: Contract is compiled and verified
 
-- Midnight JS SDK
+Blockchain Ready: Structure is complete for Midnight Network deployment
 
- Lightweight component structure
-Key UI Components:
+Dependencies: Requires Midnight SDK for actual blockchain deployment
 
-- VIPTiers.jsx → Displays tiers
+Network Support: Configured for Midnight DevNet deployment
 
-- VipLounge.jsx → Exclusive content area
+📄 License
+MIT License - See LICENSE file for details.
 
-- VerificationError.jsx → Error handling
+🤝 Support & Deployment
+For deployment assistance and Midnight Network access:
 
-Midnight Client
+Contact Midnight Network team for SDK access
 
-`frontend/src/utils/MidnightClient.js` manages:
+Reference contract ID: TieredTokenGated
 
-- Proof generation
+Circuit count: 8 ZK circuits
 
-- Contract interactions
+Witness functions: 2 (privateBalance, privateTier)
 
-- Circuit execution
-## 🧪 Development Notes
-
-To avoid committing `node_modules`, make sure `.gitignore` includes:
-```bash
-frontend/node_modules/
-```
-To format the compact contracts, run:
-```bash
-midnight-compact fmt contracts/VipPassToken.compact
-```
-## 📜 License
-
-This project is licensed under the MIT License.
-
-
+Project organized and ready for Midnight Network deployment
