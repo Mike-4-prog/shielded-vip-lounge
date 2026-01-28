@@ -29,6 +29,7 @@ The Shielded VIP Lounge contract implements a privacy-preserving access control 
 - **Token Gating**: Access control based on token balances
 
 ## 📁 Project Structure
+```text
 shielded-vip-lounge/
 ├── clean-deployment-project/ # Main deployment workspace
 │ ├── contract-build/ # Compiled contract
@@ -44,8 +45,7 @@ shielded-vip-lounge/
 │ └── src/ # TypeScript source files
 ├── frontend/ # Web interface (optional)
 └── scripts/ # Utility scripts
-
-text
+```
 
 ## 🚀 Quick Start
 
